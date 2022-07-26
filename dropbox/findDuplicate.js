@@ -52,14 +52,15 @@ var findDuplicate = function (paths) {
   // split each element by space [filePath, file1, file2...]
   // for each file, look at last 6 chars for contents (or, look at fileString[last - 6] thru fileString[last - 2] for contents, assuming contents is only 4 chars long, found at end of every file name every time)
   // if file contents has been seen before, store file path and file name as a value in an array, no spaces
-  // return Object.values(map)
+  // return array containing duplicate files (no single, unique files. each "entry" must be >= 2)
   let duplicates = {};
   for (let directory of paths) {
     let files = directory.split(' '); // [filePath, file1, file2...]
     let path = files.shift(); // filepath & [file1, file2...]
     for (let file of files) { // split contents from name: 1.txt(abcd)
-      let name = file.slice(0, file.length - 6);
-      let contents = file.slice(file.length - 7, file.length - 1);
+      let fileNameEnd = file.indexOf('(');
+      let name = file.slice(0, fileNameEnd);
+      let contents = file.slice(fileNameEnd, file.length - 1);
       if (!duplicates[contents]) {
         duplicates[contents] = [path + '/' + name];
       } else {
@@ -67,7 +68,13 @@ var findDuplicate = function (paths) {
       }
     }
   }
-  return Object.values(duplicates);
+  let res = []
+  for (let directory in duplicates) {
+    if (duplicates[directory].length > 1) {
+      res.push(duplicates[directory]);
+    }
+  }
+  return res;
 };
 
 // var paths1 = ["root/a 1.txt(abcd) 2.txt(efgh)","root/c 3.txt(abcd)","root/c/d 4.txt(efgh)","root 4.txt(efgh)"];

@@ -40,14 +40,23 @@ At most 2 * 104 calls will be made to get, check, and release. */
  * @param {number} maxNumbers
  */
 var PhoneDirectory = function (maxNumbers) {
-
+  if (maxNumbers > 104 || maxNumbers < 1) return null;
+  this.pool = new Array(maxNumbers);
 };
 
 /**
  * @return {number}
  */
 PhoneDirectory.prototype.get = function () {
-
+  let idx = 0;
+  while (!this.pool[idx] && idx < 105) {
+    if (!!this.pool[idx]) {
+      idx++;
+    } else {
+      // console.log('🚀 ~ idx', idx);
+      return this.pool[idx];
+    }
+  }
 };
 
 /**
@@ -55,7 +64,8 @@ PhoneDirectory.prototype.get = function () {
  * @return {boolean}
  */
 PhoneDirectory.prototype.check = function (number) {
-
+  if (number < 0 || number > 104 || !!this.pool[number]) return false;
+  return true;
 };
 
 /**
@@ -63,7 +73,8 @@ PhoneDirectory.prototype.check = function (number) {
  * @return {void}
  */
 PhoneDirectory.prototype.release = function (number) {
-
+  this.pool[number] = undefined;
+  return null;
 };
 
 /**
@@ -73,3 +84,12 @@ PhoneDirectory.prototype.release = function (number) {
  * var param_2 = obj.check(number)
  * obj.release(number)
  */
+var maxNumbers = 10;
+var number = 2;
+var obj = new PhoneDirectory(maxNumbers)
+// console.log('🚀 ~ obj', obj, obj[0]);
+var param_1 = obj.get()
+// console.log('🚀 ~ param_1', param_1);
+var param_2 = obj.check(number)
+console.log('🚀 ~ param_2', param_2);
+// obj.release(number)
