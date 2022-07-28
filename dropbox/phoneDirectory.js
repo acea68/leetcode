@@ -1,4 +1,6 @@
-/* 379. Design Phone Directory
+/*
+https://leetcode.com/problems/design-phone-directory/
+379. Design Phone Directory
 Medium
 
 Design a phone directory that initially has maxNumbers empty slots that can store numbers. The directory should store numbers, check if a certain slot is empty or not, and empty a given slot.
@@ -42,21 +44,46 @@ At most 2 * 104 calls will be made to get, check, and release. */
 var PhoneDirectory = function (maxNumbers) {
   if (maxNumbers > 104 || maxNumbers < 1) return null;
   this.pool = new Array(maxNumbers);
+  this.limit = maxNumbers;
 };
 
 /**
  * @return {number}
  */
 PhoneDirectory.prototype.get = function () {
-  let idx = 0;
-  while (!this.pool[idx] && idx < 105) {
-    if (!!this.pool[idx]) {
-      idx++;
+  let ind = 0;
+  // return first index whose element is not undefined
+  while (ind < 105 && ind < this.limit) {
+    if (this.pool[ind] === undefined) {
+      this.pool[ind] = ind;
+      return ind;
     } else {
-      // console.log('🚀 ~ idx', idx);
-      return this.pool[idx];
+      ind++;
     }
   }
+  return -1;
+
+
+  // if (this.pool[idx] === undefined) {
+  //   while (!this.pool[idx] && idx < 105) {
+  //     if (this.pool[idx] !== undefined) {
+  //       idx++;
+  //     } else {
+  //       // console.log('🚀 ~ idx', idx);
+  //       this.pool[idx] = idx;
+  //       return idx;
+  //     }
+  //   }
+  // } else {
+  //   while (Number.isInteger(this.pool[idx]) && idx < 105) {
+  //     if (this.pool[idx] !== undefined) {
+  //       idx++;
+  //     } else {
+  //       this.pool[idx] = idx;
+  //       return idx;
+  //     }
+  //   }
+  // }
 };
 
 /**
@@ -64,7 +91,7 @@ PhoneDirectory.prototype.get = function () {
  * @return {boolean}
  */
 PhoneDirectory.prototype.check = function (number) {
-  if (number < 0 || number > 104 || !!this.pool[number]) return false;
+  if (number < 0 || number > 104 || Number.isInteger(this.pool[number])) return false;
   return true;
 };
 
@@ -84,12 +111,36 @@ PhoneDirectory.prototype.release = function (number) {
  * var param_2 = obj.check(number)
  * obj.release(number)
  */
-var maxNumbers = 10;
-var number = 2;
-var obj = new PhoneDirectory(maxNumbers)
-// console.log('🚀 ~ obj', obj, obj[0]);
-var param_1 = obj.get()
-// console.log('🚀 ~ param_1', param_1);
-var param_2 = obj.check(number)
-console.log('🚀 ~ param_2', param_2);
+// var maxNumbers = 10;
+// var number = 2;
+// var obj = new PhoneDirectory(maxNumbers)
+// // console.log('🚀 ~ obj', obj, obj[0]);
+// var param_1 = obj.get()
+// // console.log('🚀 ~ param_1', param_1);
+// var param_2 = obj.check(number)
+// // console.log('🚀 ~ param_2', param_2);
 // obj.release(number)
+
+// var Input = ["PhoneDirectory", "get", "get", "check", "get", "check", "release", "check"]
+// // [[3], [], [], [2], [], [2], [2], [2]];
+// var Output = [null, 0, 1, true, 2, false, null, true];
+
+// // Explanation
+// let phoneDirectory = new PhoneDirectory(3);
+// console.log(phoneDirectory.get());      // It can return any available phone number. Here we assume it returns 0.
+// console.log(phoneDirectory.get());      // Assume it returns 1.
+// console.log(phoneDirectory.check(2));   // The number 2 is available, so return true.
+// console.log(phoneDirectory.get());      // It returns 2, the only number that is left.
+// console.log(phoneDirectory.check(2));   // The number 2 is no longer available, so return false.
+// console.log(phoneDirectory.release(2)); // Release number 2 back to the pool.
+// console.log(phoneDirectory.check(2));   // Number 2 is available again, return true.
+
+input = ["PhoneDirectory","check","get","check","get"];
+// [[1],[0],[],[0],[]];
+var output = [null,true,0,false,-1]
+
+let phoneDirectory = new PhoneDirectory(1);
+console.log(phoneDirectory.check(0));
+console.log(phoneDirectory.get());
+console.log(phoneDirectory.check(0));
+console.log(phoneDirectory.get());
